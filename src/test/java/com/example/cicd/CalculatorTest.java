@@ -20,6 +20,22 @@ class CalculatorTest {
         // TODO: weitere Grenzfälle (z. B. negative Zahlen)
     }
 
+    // Added new substract test
+    @Test
+    void substract_shouldSubstractTwoIntegers() {
+        Calculator c = new Calculator();
+        assertEquals(5, c.subtract(10, 5));
+        // TODO: weitere Grenzfälle (z. B. negative Zahlen)
+    }
+
+    // Added new addAll test
+    @Test
+    void addAll_shouldAddAllValues() {
+        Calculator c = new Calculator();
+        List<Integer> nums = Arrays.asList(1, 2, 3, null, 4);
+        assertEquals(10, c.addAll(nums));
+    }
+
     @Test
     void divide_byZero_shouldReturnZero_currentBehavior() {
         Calculator c = new Calculator();
