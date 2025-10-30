@@ -18,8 +18,33 @@ permissions:
 
 jobs:
   noop:
-    name: Setup check
+    name: Build & Test
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        java: [17, 21]
+        exclude:
+          - os: macos-latest
+            java: 21
     steps:
-      - name: Print context (placeholder)
-        run: echo "Workflow-Setup aktiv (Trigger/Concurrency/Path-Filter)."
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Temurin JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.java }}
+          cache: maven
+
+      - name: Build & Test (Maven)
+        run: mvn -B -fae -DskipTests=false clean verify
+
+      - name: Upload Surefire reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: surefire-reports
+          path: |
+            **/target/surefire-reports/**
