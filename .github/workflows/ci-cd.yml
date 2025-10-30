@@ -19,7 +19,6 @@ permissions:
 jobs:
   noop:
     name: Build & Test
-    runs-on: ubuntu-latest
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
@@ -29,7 +28,7 @@ jobs:
             java: 21
 
     runs-on: ${{ matrix.os }}
-    
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
