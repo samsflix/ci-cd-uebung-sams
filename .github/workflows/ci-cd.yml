@@ -1,0 +1,25 @@
+name: CI (Workflow-Setup)
+
+on:
+  commit:
+    branches: [ "main" ]
+    paths:
+      - "**/*.java"
+      - "pom.xml"
+      - ".mvn/**"
+      - ".github/workflows/**"
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  noop:
+    name: Setup check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print context (placeholder)
+        run: echo "Workflow-Setup aktiv (Trigger/Concurrency/Path-Filter)."
