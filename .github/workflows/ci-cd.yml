@@ -9,6 +9,14 @@ on:
       - '.mvn/**'
       - '.github/workflows/**'
 
+  pull_request:
+    branches: [ 'main' ]
+    paths:
+      - '**/*.java'
+      - 'pom.xml'
+      - '.mvn/**'
+      - '.github/workflows/**'
+
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
