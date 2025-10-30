@@ -1,13 +1,13 @@
 name: CI (Workflow-Setup)
 
 on:
-  commit:
-    branches: [ "main" ]
+  push:
+    branches: [ 'main' ]
     paths:
-      - "**/*.java"
-      - "pom.xml"
-      - ".mvn/**"
-      - ".github/workflows/**"
+      - '**/*.java'
+      - 'pom.xml'
+      - '.mvn/**'
+      - '.github/workflows/**'
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
