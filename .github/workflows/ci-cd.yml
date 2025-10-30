@@ -39,7 +39,8 @@ jobs:
           cache: maven
 
       - name: Build & Test (Maven)
-        run: mvn -B -fae -DskipTests=false clean verify
+        run: mvn -B -fae -DskipTests=false -Djava.release=${{ matrix.java }} clean verify
+
 
       - name: Upload Surefire reports
         if: always()
