@@ -1,53 +1,76 @@
-name: CI
+name: CI (Build & Test – Diagnose)
+
 on:
   push:
-    branches: [ main ]
-    paths: [ 'pom.xml', 'src/', '.github/workflows/' ]
-  pull_request:
-    branches: [ main ]
-    paths: [ 'pom.xml', 'src/', '.github/workflows/' ]
+    branches: [ 'main' ]
+    paths:
+      - '**/*.java'
+      - 'pom.xml'
+      - '.mvn/**'
+      - '.github/workflows/**'
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
 
-concurrency:
-  group: ci-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
-  hello:
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "Hello, CI!, I love CI/CD pipelines!"
-  
   build-test:
-    needs: hello
-    name: "Test (${{ matrix.os }} / Java ${{ matrix.java }})"
+    name: Build & Test (${{ matrix.os }}, Java ${{ matrix.java }})
+    runs-on: ${{ matrix.os }}
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
-        os:   [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
         java: [17, 21]
         exclude:
-          - os: windows-latest
+          - os: macos-latest
             java: 21
-    runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-java@v4
+      - name: Show tool versions
+        run: |
+          echo "Runner: $RUNNER_OS"
+          java -version || true
+          mvn -version || true
+
+      - name: Set up Temurin JDK ${{ matrix.java }}
+        uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: ${{ matrix.java }}
           cache: maven
 
-      - name: Build & Test
-        run: mvn -B -DskipTests=false test
+      - name: Verify tool versions after setup
+        run: |
+          java -version
+          mvn -version
 
-      - name: Upload test reports
+      - name: Build & Test (Maven, verbose)
+        shell: bash
+        run: |
+          set -o pipefail
+          mvn -B -e -X -fae -DskipTests=false -Djava.release=${{ matrix.java }} clean verify 2>&1 | tee build.log
+
+      - name: Upload Surefire reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: surefire-${{ matrix.os }}-java${{ matrix.java }}
-          path: target/surefire-reports
+          path: |
+            **/target/surefire-reports/**
+          if-no-files-found: warn
+          retention-days: 7
+
+      - name: Upload build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: buildlog-${{ matrix.os }}-java${{ matrix.java }}
+          path: build.log
+          retention-days: 7
