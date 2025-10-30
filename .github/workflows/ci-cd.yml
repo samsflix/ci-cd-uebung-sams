@@ -98,7 +98,7 @@ jobs:
           cache: maven
 
       - name: Build & Test (with coverage)
-        run: mvn -B -DskipTests=false test
+        run: mvn -B -DskipTests=false clean verify
 
       - name: Upload test reports
         if: always()
