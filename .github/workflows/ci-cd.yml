@@ -18,7 +18,7 @@ jobs:
   hello:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Hello, CI!"
+      - run: echo "Hello, CI!, I love CI/CD pipelines!"
   
   build-test:
     needs: hello
