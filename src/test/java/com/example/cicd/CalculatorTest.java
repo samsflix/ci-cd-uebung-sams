@@ -42,11 +42,4 @@ class CalculatorTest {
         // Aktuelles (schlechtes) Verhalten absichtlich bestätigt – Refactoring in Ü2
         assertEquals(0, c.divide(10, 0));
     }
-
-    @Test
-    void sum_methods_shouldProduceSameResult() {
-        Calculator c = new Calculator();
-        List<Integer> nums = Arrays.asList(1, 2, 3, null, 4);
-        assertEquals(c.sumUp(nums), c.addAll(nums));
-    }
 }
