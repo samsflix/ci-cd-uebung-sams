@@ -1,3 +1,5 @@
+[![CI (Build & Test – Diagnose)](https://github.com/samsflix/ci-cd-uebung-sams/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/samsflix/ci-cd-uebung-sams/actions/workflows/ci-cd.yml)
+
 # CI/CD Übung – Java Basisprojekt (Ü1 mit Anleitungen)
 
 Dieses Repository ist der Startpunkt für **Übung 1** und wird in **allen folgenden Übungen** weiterverwendet
