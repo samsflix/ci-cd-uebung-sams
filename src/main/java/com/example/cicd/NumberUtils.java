@@ -2,7 +2,7 @@ package com.example.cicd;
 
 public class NumberUtils {
 
-    public int DEFAULT_LIMIT = 10;
+    public final int DEFAULT_LIMIT = 10;
 
     private int unusedCounter = 0; 
 
