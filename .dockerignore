@@ -1,0 +1,15 @@
+# Maven build output
+target/
+
+# Git / CI
+.git/
+.gitignore
+.github/
+
+# IDE
+.idea/
+.vscode/
+
+# OS / Sonstiges
+.DS_Store
+Thumbs.db
