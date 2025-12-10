@@ -135,6 +135,8 @@ jobs:
             -Dsonar.branch.name=main
             -Dsonar.java.binaries=target/classes
             -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+            -Dsonar.qualitygate.wait=true
+            -Dsonar.qualitygate.timeout=300
 
   docker-build-artifact:
     needs: [ build-test, sonar-test ]
