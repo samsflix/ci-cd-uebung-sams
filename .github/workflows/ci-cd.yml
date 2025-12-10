@@ -210,7 +210,6 @@ jobs:
           grype local/app:${{ needs.docker-build-artifact.outputs.short_sha }} -o sarif > grype-results.sarif
 
       - name: Grype quality-gate experiment (fail on high, only fixed)
-        continue-on-error: true
         run: |
           grype local/app:${{ needs.docker-build-artifact.outputs.short_sha }} \
             --only-fixed \
@@ -262,7 +261,6 @@ jobs:
           trivy image --format sarif --output trivy-results.sarif local/app:${{ needs.docker-build-artifact.outputs.short_sha }}
 
       - name: Trivy quality-gate experiment (HIGH/CRITICAL, ignore unfixed)
-        continue-on-error: true
         run: |
           trivy image \
             --severity HIGH,CRITICAL \
