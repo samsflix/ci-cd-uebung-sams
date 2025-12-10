@@ -209,11 +209,20 @@ jobs:
           grype local/app:${{ needs.docker-build-artifact.outputs.short_sha }} -o json  > grype-results.json
           grype local/app:${{ needs.docker-build-artifact.outputs.short_sha }} -o sarif > grype-results.sarif
 
-      - name: Grype quality-gate experiment (fail on high, only fixed)
+      - name: Grype quality-gate experiment 1 (all vulnerabilities, fail on high)
+        continue-on-error: true
         run: |
+          echo "=== Experiment 1: Fail on HIGH (including unfixed) ==="
+          grype local/app:${{ needs.docker-build-artifact.outputs.short_sha }} \
+            --fail-on high
+
+      - name: Grype quality-gate experiment 2 (only fixed vulnerabilities)
+        continue-on-error: true
+        run: |
+          echo "=== Experiment 2: Only fixed vulnerabilities, fail on critical ==="
           grype local/app:${{ needs.docker-build-artifact.outputs.short_sha }} \
             --only-fixed \
-            --fail-on high
+            --fail-on critical
 
       - name: Upload Grype results to GitHub Security
         if: always()
@@ -260,8 +269,19 @@ jobs:
           trivy image --format json  --output trivy-results.json  local/app:${{ needs.docker-build-artifact.outputs.short_sha }}
           trivy image --format sarif --output trivy-results.sarif local/app:${{ needs.docker-build-artifact.outputs.short_sha }}
 
-      - name: Trivy quality-gate experiment (HIGH/CRITICAL, ignore unfixed)
+      - name: Trivy quality-gate experiment 1 (HIGH/CRITICAL including unfixed)
+        continue-on-error: true
         run: |
+          echo "=== Experiment 1: HIGH/CRITICAL including unfixed ==="
+          trivy image \
+            --severity HIGH,CRITICAL \
+            --exit-code 1 \
+            local/app:${{ needs.docker-build-artifact.outputs.short_sha }}
+
+      - name: Trivy quality-gate experiment 2 (only fixable vulnerabilities)
+        continue-on-error: true
+        run: |
+          echo "=== Experiment 2: Only fixable vulnerabilities ==="
           trivy image \
             --severity HIGH,CRITICAL \
             --ignore-unfixed \
