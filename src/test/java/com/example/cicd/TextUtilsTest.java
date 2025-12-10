@@ -21,7 +21,37 @@ class TextUtilsTest {
     }
 
     @Test
+    void safeParseInt_nullString_returnsZero() {
+        assertEquals(0, TextUtils.safeParseInt(null));
+    }
+
+    @Test
+    void safeParseInt_emptyString_returnsZero() {
+        assertEquals(0, TextUtils.safeParseInt(""));
+    }
+
+    @Test
     void isPalindrome_caseInsensitive_expectedTrue() {
         assertTrue(TextUtils.isPalindrome("Anna"));
+    }
+
+    @Test
+    void isPalindrome_nullInput_returnsFalse() {
+        assertFalse(TextUtils.isPalindrome(null));
+    }
+
+    @Test
+    void isPalindrome_emptyString_returnsTrue() {
+        assertTrue(TextUtils.isPalindrome(""));
+    }
+
+    @Test
+    void isPalindrome_singleCharacter_returnsTrue() {
+        assertTrue(TextUtils.isPalindrome("a"));
+    }
+
+    @Test
+    void isPalindrome_notPalindrome_returnsFalse() {
+        assertFalse(TextUtils.isPalindrome("hello"));
     }
 }
