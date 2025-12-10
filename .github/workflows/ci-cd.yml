@@ -132,7 +132,7 @@ jobs:
             -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
 
   docker-build-artifact:
-    needs: build-test
+    needs: [build-test, sonar-test]
     name: Docker Image (Artifact)
     runs-on: ubuntu-latest
 
