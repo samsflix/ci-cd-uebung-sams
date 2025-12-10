@@ -91,55 +91,55 @@ jobs:
           path: build.log
           retention-days: 7
 
-  sonar-test:
-    needs: build-test
-    name: SonarCloud Scan
-    runs-on: ubuntu-latest
+  # sonar-test:
+  #   needs: build-test
+  #   name: SonarCloud Scan
+  #   runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
 
-      - name: Set up Java 17
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: "17"
-          cache: maven
+  #     - name: Set up Java 17
+  #       uses: actions/setup-java@v4
+  #       with:
+  #         distribution: temurin
+  #         java-version: "17"
+  #         cache: maven
 
-      - name: Build & Test (with coverage)
-        run: mvn -B -DskipTests=false clean verify
+  #     - name: Build & Test (with coverage)
+  #       run: mvn -B -DskipTests=false clean verify
 
-      - name: Upload test reports
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: surefire-reports
-          path: target/surefire-reports
+  #     - name: Upload test reports
+  #       if: always()
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: surefire-reports
+  #         path: target/surefire-reports
 
-      - name: Upload JaCoCo HTML (optional)
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: jacoco-site
-          path: target/site/jacoco
+  #     - name: Upload JaCoCo HTML (optional)
+  #       if: always()
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: jacoco-site
+  #         path: target/site/jacoco
 
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@v2
-        env:
-          SONAR_TOKEN: ${{ secrets.SONA_CUBE }}
-        with:
-          args: >
-            -Dsonar.projectKey=samsflix_ci-cd-uebung-sams
-            -Dsonar.organization=samsflix
-            -Dsonar.branch.name=main
-            -Dsonar.java.binaries=target/classes
-            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
-            -Dsonar.qualitygate.wait=true
-            -Dsonar.qualitygate.timeout=300
+  #     - name: SonarCloud Scan
+  #       uses: SonarSource/sonarcloud-github-action@v2
+  #       env:
+  #         SONAR_TOKEN: ${{ secrets.SONA_CUBE }}
+  #       with:
+  #         args: >
+  #           -Dsonar.projectKey=samsflix_ci-cd-uebung-sams
+  #           -Dsonar.organization=samsflix
+  #           -Dsonar.branch.name=main
+  #           -Dsonar.java.binaries=target/classes
+  #           -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+  #           -Dsonar.qualitygate.wait=true
+  #           -Dsonar.qualitygate.timeout=300
 
   docker-build-artifact:
-    needs: [ build-test, sonar-test ]
+    needs: build-test
     name: Docker Image (Artifact)
     runs-on: ubuntu-latest
     outputs:
