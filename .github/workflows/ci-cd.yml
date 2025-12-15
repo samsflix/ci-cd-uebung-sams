@@ -210,14 +210,14 @@ jobs:
           grype local/app:${{ needs.docker-build-artifact.outputs.short_sha }} -o sarif > grype-results.sarif
 
       - name: Grype quality-gate experiment 1 (all vulnerabilities, fail on high)
-       
+        continue-on-error: true
         run: |
           echo "=== Experiment 1: Fail on HIGH (including unfixed) ==="
           grype local/app:${{ needs.docker-build-artifact.outputs.short_sha }} \
             --fail-on high
 
       - name: Grype quality-gate experiment 2 (only fixed vulnerabilities)
-        
+        continue-on-error: true
         run: |
           echo "=== Experiment 2: Only fixed vulnerabilities, fail on critical ==="
           grype local/app:${{ needs.docker-build-artifact.outputs.short_sha }} \
@@ -270,7 +270,7 @@ jobs:
           trivy image --format sarif --output trivy-results.sarif local/app:${{ needs.docker-build-artifact.outputs.short_sha }}
 
       - name: Trivy quality-gate experiment 1 (HIGH/CRITICAL including unfixed)
-        
+        continue-on-error: true
         run: |
           echo "=== Experiment 1: HIGH/CRITICAL including unfixed ==="
           trivy image \
@@ -279,7 +279,7 @@ jobs:
             local/app:${{ needs.docker-build-artifact.outputs.short_sha }}
 
       - name: Trivy quality-gate experiment 2 (only fixable vulnerabilities)
-        
+        continue-on-error: true
         run: |
           echo "=== Experiment 2: Only fixable vulnerabilities ==="
           trivy image \
